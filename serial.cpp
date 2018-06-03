@@ -5,7 +5,6 @@
 #include "Arduino.h"
 
 #include "serial.h"
-#include "text_to_morse.h"
 
 serial *system_serial = NULL;
 

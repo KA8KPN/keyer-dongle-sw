@@ -5,13 +5,11 @@
 #include "keying.h"
 #include "wpm.h"
 #include "serial.h"
+#include "paddles.h"
 
 #include "keyer.h"
 
 input_mode_t input_mode;
-
-#define DEFINE_MORSE_TABLES
-#include "morse_tables.h"
 
 void setup () {
     input_mode = MODE_PADDLE_NORMAL;

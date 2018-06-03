@@ -1,11 +1,7 @@
 #include <Arduino.h>
 
 #include "paddles.h"
-#include "display.h"
-#include "morse_tables.h"
 #include "wpm.h"
-#include "config_manager.h"
-#include "morse_to_text.h"
 
 paddles system_paddles;
 

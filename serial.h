@@ -6,7 +6,6 @@
 #ifdef FEATURE_SERIAL_INPUT
 #include "keyer.h"
 #include "keying.h"
-#include "display.h"
 #include "wpm.h"
 
 void serial_initialize(void);
