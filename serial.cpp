@@ -35,4 +35,19 @@ void serial::update(void) {
     }
 }
 
+void serial::key_up(unsigned twitches) {
+    char buff[15];
+
+    sprintf(buff, "u%u\r\n", twitches);
+    Serial.write((uint8_t *)buff, strlen(buff));
+}
+
+void serial::key_down(unsigned twitches) {
+    char buff[15];
+
+    sprintf(buff, "d%u\r\n", twitches);
+    Serial.write((uint8_t *)buff, strlen(buff));
+}
+
+
 #endif // FEATURE_SERIAL_INPUT

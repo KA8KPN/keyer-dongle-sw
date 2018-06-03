@@ -14,6 +14,8 @@ class serial {
 public:
     serial(bool echo);
     void update(void);
+    void key_up(unsigned twitches);
+    void key_down(unsigned twitches);
 
 private:
     bool m_echoChars;

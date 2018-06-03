@@ -22,6 +22,8 @@ private:
     bool m_ditClosed, m_dahClosed;
     input_mode_t m_paddleMode;
     unsigned long m_addSpaceMs;
+    unsigned long m_msTwitchTimer;
+    unsigned m_twitchCount;
 };
 
 extern paddles system_paddles;

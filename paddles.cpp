@@ -2,6 +2,7 @@
 
 #include "paddles.h"
 #include "wpm.h"
+#include "serial.h"
 
 paddles system_paddles;
 
@@ -22,6 +23,8 @@ paddles::paddles(void) : m_leftPaddle(0), m_rightPaddle(0), m_paddleMode(MODE_PA
     m_ditClosed = false;
     m_dahClosed = false;
     m_addSpaceMs = 0;
+    m_msTwitchTimer = 0;
+    m_twitchCount = 0;
 }
 
 
@@ -36,6 +39,13 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
     if (now >= m_startReadingPaddlesMs) {
 	m_dahClosed = m_dahClosed || (0 == digitalRead(m_dahPaddle));
 	m_ditClosed = m_ditClosed || (0 == digitalRead(m_ditPaddle));
+    }
+
+    if (m_msTwitchTimer <= now) {
+	m_msTwitchTimer = now + WPM_TWITCHES();
+	if (m_twitchCount < 10000) {
+	    ++m_twitchCount;
+	}
     }
 
     if ((MODE_PADDLE_NORMAL == input_mode) || (MODE_PADDLE_REVERSE == input_mode)) {
@@ -79,6 +89,8 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 	    case KEY_DIT:
 		//  MORSE_TO_TEXT_UPDATE(Dit);
 		// TODO:  Tell the host about the dit
+		system_serial->key_up(m_twitchCount);
+		system_serial->key_down(TWITCHES_PER_DOT);
 		ptt_delay = TRANSMITTER_KEY_DOWN();
 		m_nextStateTransitionMs = now + WPM_DOT_TWITCHES() + ptt_delay;
 		m_startReadingPaddlesMs = now + WPM_DOT_TWITCHES() + ptt_delay;
@@ -90,6 +102,8 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 	    case KEY_DAH:
 		// MORSE_TO_TEXT_UPDATE(Dah);
 		// TODO:  Tell the host about the dah
+		system_serial->key_up(m_twitchCount);
+		system_serial->key_down(TWITCHES_PER_DASH);
 		ptt_delay = TRANSMITTER_KEY_DOWN();
 		m_nextStateTransitionMs = now + WPM_DASH_TWITCHES() + ptt_delay;
 		m_startReadingPaddlesMs = now + WPM_DASH_TWITCHES() + ptt_delay;
@@ -108,6 +122,7 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 		    }
 		}
 		else {
+		    m_twitchCount = 0;
 		    TRANSMITTER_KEY_UP();
 		    m_nextStateTransitionMs = now + WPM_DOT_TWITCHES();
 		}
