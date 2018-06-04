@@ -1,7 +1,7 @@
 #if !defined(KEYING_H)
 #define KEYING_H
 
-typedef enum keyer_state { KEY_DIT, KEY_DAH, KEY_UP } keyer_state_t;
+typedef enum keyer_state { KEY_DIT, KEY_DAH, KEY_UP, KEY_UP_LONGER } keyer_state_t;
 
 class keying {
 public:

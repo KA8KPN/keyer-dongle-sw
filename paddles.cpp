@@ -18,11 +18,10 @@ void paddles_initialize(byte right_paddle, byte left_paddle)
 paddles::paddles(void) : m_leftPaddle(0), m_rightPaddle(0), m_paddleMode(MODE_PADDLE_NORMAL) {
     m_nextStateTransitionMs = 100 + millis();
     m_startReadingPaddlesMs = 0;
-    m_keyerState = KEY_UP;
-    m_lastKeyerState = KEY_UP;
+    m_keyerState = KEY_UP_LONGER;
+    m_lastKeyerState = KEY_UP_LONGER;
     m_ditClosed = false;
     m_dahClosed = false;
-    m_addSpaceMs = 0;
     m_msTwitchTimer = 0;
     m_twitchCount = 0;
 }
@@ -61,6 +60,7 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 		break;
 
 	    case KEY_UP:
+	    case KEY_UP_LONGER:
 		// I ought to be able to build this into a table and make it table driven
 		switch(m_lastKeyerState) {
 		case KEY_DIT:
@@ -87,8 +87,6 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 	    m_lastKeyerState = tempKeyerState;
 	    switch(m_keyerState) {
 	    case KEY_DIT:
-		//  MORSE_TO_TEXT_UPDATE(Dit);
-		// TODO:  Tell the host about the dit
 		system_serial->key_up(m_twitchCount);
 		system_serial->key_down(TWITCHES_PER_DOT);
 		ptt_delay = TRANSMITTER_KEY_DOWN();
@@ -96,12 +94,9 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 		m_startReadingPaddlesMs = now + WPM_DOT_TWITCHES() + ptt_delay;
 		m_ditClosed = false;
 		m_dahClosed = false;
-		m_addSpaceMs = 0;
 		break;
 
 	    case KEY_DAH:
-		// MORSE_TO_TEXT_UPDATE(Dah);
-		// TODO:  Tell the host about the dah
 		system_serial->key_up(m_twitchCount);
 		system_serial->key_down(TWITCHES_PER_DASH);
 		ptt_delay = TRANSMITTER_KEY_DOWN();
@@ -109,16 +104,15 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 		m_startReadingPaddlesMs = now + WPM_DASH_TWITCHES() + ptt_delay;
 		m_ditClosed = false;
 		m_dahClosed = false;
-		m_addSpaceMs = 0;
 		break;
 
-	    default:
+	    case KEY_UP:
 		if (KEY_UP == m_lastKeyerState) {
-		    // TODO:  Tell the host about the silence
-		    // MORSE_TO_TEXT_UPDATE(CharSpace);
 		    input_mode = m_paddleMode;
-		    if (0 == m_addSpaceMs) {
-			m_addSpaceMs = now + WPM_WORD_TWITCHES();
+		    if (100 <= m_twitchCount) {
+			system_serial->key_up(m_twitchCount);
+			m_twitchCount = 0;
+			m_keyerState = KEY_UP_LONGER;
 		    }
 		}
 		else {
@@ -127,12 +121,10 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 		    m_nextStateTransitionMs = now + WPM_DOT_TWITCHES();
 		}
 		break;
-	    }
-	}
 
-	if ((0 < m_addSpaceMs) && (now >= m_addSpaceMs)) {
-	    m_addSpaceMs = 0;
-	    // MORSE_TO_TEXT_UPDATE(WordSpace);
+	    default:
+		break;
+	    }
 	}
     }
     return input_mode;
