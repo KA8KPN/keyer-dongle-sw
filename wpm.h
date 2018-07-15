@@ -20,6 +20,7 @@ private:
     unsigned m_dotTwitches;
     unsigned m_dashTwitches;
     unsigned m_wordTwitches;
+    int m_percentage;
 };
 
 extern wpm *system_wpm;

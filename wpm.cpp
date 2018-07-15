@@ -5,6 +5,7 @@
 #include <Arduino.h>
 
 #include "wpm.h"
+#include "serial.h"
 
 #include "keyer.h"
 
@@ -15,6 +16,7 @@ void wpm_initialize(void) {
 }
 
 wpm::wpm(byte potPin) : m_potPin(potPin) {
+    m_percentage = 200;
 }
 
 void wpm::update(void) {
@@ -31,6 +33,13 @@ void wpm::update(void) {
     m_dotTwitches = MS_PER_DOT/wpm;
     m_dashTwitches = MS_PER_DASH/wpm;
     m_wordTwitches = MS_PER_WORD/wpm;
+    // My pot only goes to 900 at its top end
+    int percentage =  (100L * potValue) / 900;
+    // There's a lot of noise on the AI, so I need a delta of at least two
+    if (percentage != m_percentage) {
+	system_serial->pot_value(percentage);
+	m_percentage = percentage;
+    }
 }
 
 #endif // defined(FEATURE_SPEED_CONTROL)

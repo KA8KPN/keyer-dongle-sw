@@ -24,6 +24,8 @@ paddles::paddles(void) : m_leftPaddle(0), m_rightPaddle(0), m_paddleMode(MODE_PA
     m_dahClosed = false;
     m_msTwitchTimer = 0;
     m_twitchCount = 0;
+    m_rightClosed = false;
+    m_leftClosed = false;
 }
 
 
@@ -39,6 +41,18 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 	m_dahClosed = m_dahClosed || (0 == digitalRead(m_dahPaddle));
 	m_ditClosed = m_ditClosed || (0 == digitalRead(m_ditPaddle));
     }
+
+    bool closed = (0 == digitalRead(m_rightPaddle));
+    if (!m_rightClosed && closed) {
+	system_serial->contact_closed(m_transmitter, true);
+    }
+    m_rightClosed = closed;
+
+    closed = (0 == digitalRead(m_leftPaddle));
+    if (!m_leftClosed && closed) {
+	system_serial->contact_closed(m_transmitter, false);
+    }
+    m_leftClosed = closed;
 
     if (m_msTwitchTimer <= now) {
 	m_msTwitchTimer = now + WPM_TWITCHES();
@@ -87,9 +101,9 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 	    m_lastKeyerState = tempKeyerState;
 	    switch(m_keyerState) {
 	    case KEY_DIT:
-		system_serial->key_up(m_twitchCount);
-		system_serial->key_down(TWITCHES_PER_DOT);
-		ptt_delay = TRANSMITTER_KEY_DOWN();
+		system_serial->key_up(m_transmitter, m_twitchCount);
+		system_serial->key_down(m_transmitter, TWITCHES_PER_DOT);
+		ptt_delay = TRANSMITTER_KEY_DOWN(m_transmitter);
 		m_nextStateTransitionMs = now + WPM_DOT_TWITCHES() + ptt_delay;
 		m_startReadingPaddlesMs = now + WPM_DOT_TWITCHES() + ptt_delay;
 		m_ditClosed = false;
@@ -97,9 +111,9 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 		break;
 
 	    case KEY_DAH:
-		system_serial->key_up(m_twitchCount);
-		system_serial->key_down(TWITCHES_PER_DASH);
-		ptt_delay = TRANSMITTER_KEY_DOWN();
+		system_serial->key_up(m_transmitter, m_twitchCount);
+		system_serial->key_down(m_transmitter, TWITCHES_PER_DASH);
+		ptt_delay = TRANSMITTER_KEY_DOWN(m_transmitter);
 		m_nextStateTransitionMs = now + WPM_DASH_TWITCHES() + ptt_delay;
 		m_startReadingPaddlesMs = now + WPM_DASH_TWITCHES() + ptt_delay;
 		m_ditClosed = false;
@@ -110,14 +124,14 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 		if (KEY_UP == m_lastKeyerState) {
 		    input_mode = m_paddleMode;
 		    if (100 <= m_twitchCount) {
-			system_serial->key_up(m_twitchCount);
+			system_serial->key_up(m_transmitter, m_twitchCount);
 			m_twitchCount = 0;
 			m_keyerState = KEY_UP_LONGER;
 		    }
 		}
 		else {
 		    m_twitchCount = 0;
-		    TRANSMITTER_KEY_UP();
+		    TRANSMITTER_KEY_UP(m_transmitter);
 		    m_nextStateTransitionMs = now + WPM_DOT_TWITCHES();
 		}
 		break;
@@ -143,4 +157,8 @@ input_mode_t paddles::toggle_reverse(void) {
 	m_paddleMode = MODE_PADDLE_NORMAL;
     }
     return m_paddleMode;
+}
+
+void paddles::set_transmitter(int t) {
+    m_transmitter = t;
 }
