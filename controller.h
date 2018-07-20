@@ -16,7 +16,7 @@ typedef struct key_list {
 class remote_controller {
 public:
     remote_controller(unsigned transmitter);
-    void key(bool key_down, unsigned duration);
+    bool key(bool key_down, unsigned duration);
     input_mode_t update(unsigned long now, input_mode_t input_mode);
 
 private:

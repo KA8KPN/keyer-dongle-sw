@@ -24,6 +24,10 @@ serial::serial(bool echo) : m_echoChars(echo) {
     m_sawCr = false;
 }
 
+void serial::send_continue(void) {
+    Serial.write((uint8_t *)"x\r\n", 3);
+}
+
 void serial::process(void) {
     if (('u' == m_buffer[0]) && (':' == m_buffer[1])) {
 	char *dptr;
@@ -31,7 +35,9 @@ void serial::process(void) {
 
 	xmitter = strtol(m_buffer+2, &dptr, 10);
 	if (dptr != (2 + m_buffer)) {
-	    controllers[xmitter-1]->key(false,strtol(dptr + 1, NULL, 10));
+	    if (controllers[xmitter-1]->key(false,strtol(dptr + 1, NULL, 10))) {
+		send_continue();
+	    }
 	}
     }
     if (('d' == m_buffer[0]) && (':' == m_buffer[1])) {
@@ -40,7 +46,9 @@ void serial::process(void) {
 
 	xmitter = strtol(m_buffer+2, &dptr, 10);
 	if (dptr != (2 + m_buffer)) {
-	    controllers[xmitter-1]->key(true, strtol(dptr + 1, NULL, 10));
+	    if (controllers[xmitter-1]->key(true, strtol(dptr + 1, NULL, 10))) {
+		send_continue();
+	    }
 	}
     }
 }
@@ -103,18 +111,5 @@ void serial::pot_value(unsigned value) {
     sprintf(buff, "s:%u\r\n", value);
     Serial.write((uint8_t *)buff, strlen(buff));
 }
-
-void serial::flow_control(int xmitter, bool flow_on) {
-    char buff[30];
-
-    if (flow_on) {
-	sprintf(buff, "xon:%d\r\n", xmitter);
-    }
-    else {
-	sprintf(buff, "xoff:%d\r\n", xmitter);
-    }
-    Serial.write((uint8_t *)buff, strlen(buff));
-}
-
 
 #endif // FEATURE_SERIAL_INPUT

@@ -18,7 +18,7 @@ public:
     void key_down(int xmitter, unsigned twitches);
     void contact_closed(int xmitter, bool right);
     void pot_value(unsigned value);
-    void flow_control(int xmitter, bool flow_on);
+    void send_continue(void);
 
 private:
     void process(void);
