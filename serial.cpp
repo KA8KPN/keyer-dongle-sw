@@ -25,7 +25,21 @@ serial::serial(bool echo) : m_echoChars(echo) {
 }
 
 void serial::send_continue(void) {
-    Serial.write((uint8_t *)"x\r\n", 3);
+    Serial.write((uint8_t *)"a\r\n", 3);
+}
+
+void serial::xoff(int xmitter) {
+    char buff[15];
+    int len;
+    len = sprintf(buff, "xoff:%d\r\n", xmitter);
+    Serial.write((uint8_t *)buff, len);
+}
+
+void serial::xon(int xmitter) {
+    char buff[15];
+    int len;
+    len = sprintf(buff, "xon:%d\r\n", xmitter);
+    Serial.write((uint8_t *)buff, len);
 }
 
 void serial::process(void) {
@@ -35,9 +49,8 @@ void serial::process(void) {
 
 	xmitter = strtol(m_buffer+2, &dptr, 10);
 	if (dptr != (2 + m_buffer)) {
-	    if (controllers[xmitter-1]->key(false,strtol(dptr + 1, NULL, 10))) {
-		send_continue();
-	    }
+	    controllers[xmitter-1]->key(false,strtol(dptr + 1, NULL, 10));
+	    send_continue();
 	}
     }
     if (('d' == m_buffer[0]) && (':' == m_buffer[1])) {
@@ -46,9 +59,8 @@ void serial::process(void) {
 
 	xmitter = strtol(m_buffer+2, &dptr, 10);
 	if (dptr != (2 + m_buffer)) {
-	    if (controllers[xmitter-1]->key(true, strtol(dptr + 1, NULL, 10))) {
-		send_continue();
-	    }
+	    controllers[xmitter-1]->key(true, strtol(dptr + 1, NULL, 10));
+	    send_continue();
 	}
     }
 }
@@ -81,35 +93,39 @@ void serial::update(void) {
 
 void serial::contact_closed(int xmitter, bool right) {
     char buff[15];
+    int len;
 
     if (right) {
-	sprintf(buff, "pr:%d\r\n", xmitter);
+	len = sprintf(buff, "pr:%d\r\n", xmitter);
     }
     else {
-	sprintf(buff, "pl:%d\r\n", xmitter);
+	len = sprintf(buff, "pl:%d\r\n", xmitter);
     }
-    Serial.write((uint8_t *)buff, strlen(buff));
+    Serial.write((uint8_t *)buff, len);
 }
 
 void serial::key_up(int xmitter, unsigned twitches) {
     char buff[30];
+    int len;
 
-    sprintf(buff, "u:%d:%u\r\n", xmitter, twitches);
-    Serial.write((uint8_t *)buff, strlen(buff));
+    len = sprintf(buff, "u:%d:%u\r\n", xmitter, twitches);
+    Serial.write((uint8_t *)buff, len);
 }
 
 void serial::key_down(int xmitter, unsigned twitches) {
     char buff[30];
+    int len;
 
-    sprintf(buff, "d:%d:%u\r\n", xmitter, twitches);
-    Serial.write((uint8_t *)buff, strlen(buff));
+    len = sprintf(buff, "d:%d:%u\r\n", xmitter, twitches);
+    Serial.write((uint8_t *)buff, len);
 }
 
 void serial::pot_value(unsigned value) {
     char buff[15];
+    int len;
 
-    sprintf(buff, "s:%u\r\n", value);
-    Serial.write((uint8_t *)buff, strlen(buff));
+    len = sprintf(buff, "s:%u\r\n", value);
+    Serial.write((uint8_t *)buff, len);
 }
 
 #endif // FEATURE_SERIAL_INPUT

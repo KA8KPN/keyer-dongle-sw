@@ -19,6 +19,8 @@ public:
     void contact_closed(int xmitter, bool right);
     void pot_value(unsigned value);
     void send_continue(void);
+    void xoff(int xmitter);
+    void xon(int xmitter);
 
 private:
     void process(void);
