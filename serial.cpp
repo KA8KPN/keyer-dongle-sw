@@ -3,13 +3,16 @@
 #ifdef FEATURE_SERIAL_INPUT
 
 #include "Arduino.h"
+#include "avr/wdt.h"
 
 #include "serial.h"
 #include "controller.h"
+#include "paddles.h"
 
 serial *system_serial = NULL;
 
 void serial_initialize(void) {
+    wdt_enable(WDTO_120MS);
     delay(1000);
     Serial.begin(115200);
     while (!Serial) {
@@ -42,6 +45,19 @@ void serial::xon(int xmitter) {
     Serial.write((uint8_t *)buff, len);
 }
 
+void serial::xmitter_config(int xmitter) {
+    // Okay, there is a 'c', 5 colons and a crlf, so 8 characters
+    // plus a single digit transmitter number, a single digit active flag
+    // and three three digit numbers, which is 11 more characters
+    // and a nll terminator
+    char buff[25];
+    int len;
+    len = sprintf(buff, "c:%d:%d:%d:%d:%d\r\n", xmitter, xmitter==system_paddles.transmitter(),
+		  controllers[xmitter-1]->wpm(), controllers[xmitter-1]->kdd(),
+		  controllers[xmitter-1]->kud());
+    Serial.write((uint8_t *)buff, len);
+}
+
 void serial::process(void) {
     if (('u' == m_buffer[0]) && (':' == m_buffer[1])) {
 	char *dptr;
@@ -61,6 +77,51 @@ void serial::process(void) {
 	if (dptr != (2 + m_buffer)) {
 	    controllers[xmitter-1]->key(true, strtol(dptr + 1, NULL, 10));
 	    send_continue();
+	}
+    }
+    // The reset command simple does a tight loop, which will get killed by the watchdog timer
+    if (0 == strncmp("reset", m_buffer, 5)) {
+	while(1) {
+	}
+    }
+    if (('s' == m_buffer[0]) && (':' == m_buffer[1])) {
+	char *dptr;
+	int xmitter;
+
+	xmitter = strtol(m_buffer+2, &dptr, 10);
+	if (dptr != (2 + m_buffer)) {
+	    controllers[xmitter-1]->wpm(strtol(dptr + 1, NULL, 10));
+	    send_continue();
+	}
+    }
+    if (('c' == m_buffer[0]) && (':' == m_buffer[1])) {
+	char *dptr;
+	int xmitter;
+
+	xmitter = strtol(m_buffer+2, &dptr, 10);
+	if (dptr != (2 + m_buffer)) {
+	    send_continue();
+	    xmitter_config(xmitter);
+	}
+    }
+    if (0 == strncmp("kdd:", m_buffer, 4)) {
+	char *dptr;
+	int xmitter;
+
+	xmitter = strtol(m_buffer+4, &dptr, 10);
+	if (dptr != (4 + m_buffer)) {
+	    send_continue();
+	    controllers[xmitter-1]->kdd(strtol(dptr + 1, NULL, 10));
+	}
+    }
+    if (0 == strncmp("kud:", m_buffer, 4)) {
+	char *dptr;
+	int xmitter;
+
+	xmitter = strtol(m_buffer+4, &dptr, 10);
+	if (dptr != (4 + m_buffer)) {
+	    send_continue();
+	    controllers[xmitter-1]->kud(strtol(dptr + 1, NULL, 10));
 	}
     }
 }

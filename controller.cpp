@@ -35,6 +35,20 @@ void remote_controller::key(bool key_down, unsigned duration) {
     }
 }
 
+void remote_controller::wpm(int wpm) {
+    m_wpm = wpm;
+    // TODO:  The rest of the WPM logic
+}
+
+
+void remote_controller::kud(int twitches) {
+    m_kud = twitches;
+}
+
+void remote_controller::kdd(int ms) {
+    m_kdd = ms;
+}
+
 
 input_mode_t remote_controller::update(unsigned long now, input_mode_t input_mode) {
     // If it is not transmitting right this instant, check to see if there's something in the queue

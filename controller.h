@@ -18,6 +18,13 @@ public:
     remote_controller(unsigned transmitter);
     void key(bool key_down, unsigned duration);
     input_mode_t update(unsigned long now, input_mode_t input_mode);
+    void wpm(int wpm);
+    void kud(int twitches);
+    void kdd(int ms);
+    int wpm(void) const { return m_wpm; }
+    int kud(void) const { return m_kud; }
+    int kdd(void) const { return m_kdd; }
+    void active(bool flag);
 
 private:
     key_list m_keyList[KEY_LIST_SIZE];
@@ -26,6 +33,9 @@ private:
     unsigned m_transmitter;
     bool m_paused;
     unsigned long m_nextTransition;
+    unsigned m_wpm;
+    unsigned m_kud;
+    unsigned m_kdd;
 };
 
 extern remote_controller *controllers[MAX_TRANSMITTERS];

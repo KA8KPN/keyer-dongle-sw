@@ -21,6 +21,7 @@ public:
     void send_continue(void);
     void xoff(int xmitter);
     void xon(int xmitter);
+    void xmitter_config(int xmitter);
 
 private:
     void process(void);
