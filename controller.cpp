@@ -3,6 +3,7 @@
 #include "controller.h"
 #include "paddles.h"
 #include "serial.h"
+#include "wpm.h"
 
 remote_controller *controllers[MAX_TRANSMITTERS];
 
@@ -24,13 +25,13 @@ remote_controller::remote_controller(unsigned transmitter) : m_transmitter(trans
 void remote_controller::key(bool key_down, unsigned duration) {
     if (m_count < KEY_LIST_SIZE) {
 	m_keyList[m_tail].key_down = key_down;
-	m_keyList[m_tail].duration = duration * ((unsigned long) system_wpm->twitches());
+	m_keyList[m_tail].duration = duration * ((unsigned long) WPM_TWITCHES());
 
 	m_tail = (m_tail + 1) % KEY_LIST_SIZE;
 	m_count++;
 	if (!m_paused && (HIGH_WATER == m_count)) {
 	    m_paused = true;
-	    system_serial->xoff(m_transmitter);
+	    SERIAL_XOFF(m_transmitter);
 	}
     }
 }
@@ -76,7 +77,7 @@ input_mode_t remote_controller::update(unsigned long now, input_mode_t input_mod
 		// If the number of items drops below the high water mark, turn on 
 		if (m_paused && (LOW_WATER == m_count)) {
 		    m_paused = false;
-		    system_serial->xon(m_transmitter);
+		    SERIAL_XON(m_transmitter);
 		}
 	    }
 	    else {

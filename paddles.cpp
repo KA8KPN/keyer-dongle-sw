@@ -37,6 +37,7 @@ void paddles::set_paddle_ports(byte right_paddle, byte left_paddle) {
 }
 
 input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
+    TRANSMITTER_SELECT(m_transmitter);
     if (now >= m_startReadingPaddlesMs) {
 	m_dahClosed = m_dahClosed || (0 == digitalRead(m_dahPaddle));
 	m_ditClosed = m_ditClosed || (0 == digitalRead(m_ditPaddle));
@@ -44,13 +45,13 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 
     bool closed = (0 == digitalRead(m_rightPaddle));
     if (!m_rightClosed && closed) {
-	system_serial->contact_closed(m_transmitter, true);
+	CONTACT_CLOSED(m_transmitter, true);
     }
     m_rightClosed = closed;
 
     closed = (0 == digitalRead(m_leftPaddle));
     if (!m_leftClosed && closed) {
-	system_serial->contact_closed(m_transmitter, false);
+	CONTACT_CLOSED(m_transmitter, false);
     }
     m_leftClosed = closed;
 
@@ -101,8 +102,8 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 	    m_lastKeyerState = tempKeyerState;
 	    switch(m_keyerState) {
 	    case KEY_DIT:
-		system_serial->key_up(m_transmitter, m_twitchCount);
-		system_serial->key_down(m_transmitter, TWITCHES_PER_DOT);
+		KEY_UP(m_transmitter, m_twitchCount);
+		KEY_DOWN(m_transmitter, TWITCHES_PER_DOT);
 		ptt_delay = TRANSMITTER_KEY_DOWN(m_transmitter);
 		m_nextStateTransitionMs = now + WPM_DOT_TWITCHES() + ptt_delay;
 		m_startReadingPaddlesMs = now + WPM_DOT_TWITCHES() + ptt_delay;
@@ -111,8 +112,8 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 		break;
 
 	    case KEY_DAH:
-		system_serial->key_up(m_transmitter, m_twitchCount);
-		system_serial->key_down(m_transmitter, TWITCHES_PER_DASH);
+		KEY_UP(m_transmitter, m_twitchCount);
+		KEY_DOWN(m_transmitter, TWITCHES_PER_DASH);
 		ptt_delay = TRANSMITTER_KEY_DOWN(m_transmitter);
 		m_nextStateTransitionMs = now + WPM_DASH_TWITCHES() + ptt_delay;
 		m_startReadingPaddlesMs = now + WPM_DASH_TWITCHES() + ptt_delay;
@@ -124,7 +125,7 @@ input_mode_t paddles::update(unsigned long now, input_mode_t input_mode) {
 		if (KEY_UP == m_lastKeyerState) {
 		    input_mode = m_paddleMode;
 		    if (100 <= m_twitchCount) {
-			system_serial->key_up(m_transmitter, m_twitchCount);
+			KEY_UP(m_transmitter, m_twitchCount);
 			m_twitchCount = 0;
 			m_keyerState = KEY_UP_LONGER;
 		    }
@@ -160,5 +161,6 @@ input_mode_t paddles::toggle_reverse(void) {
 }
 
 void paddles::set_transmitter(int t) {
+    TRANSMITTER_UNSELECT(m_transmitter);
     m_transmitter = t;
 }

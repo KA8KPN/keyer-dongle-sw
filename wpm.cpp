@@ -37,7 +37,7 @@ void wpm::update(void) {
     int percentage =  (100L * potValue) / 900;
     // There's a lot of noise on the AI, so I need a delta of at least two
     if (percentage != m_percentage) {
-	system_serial->pot_value(percentage);
+	POT_VALUE(percentage);
 	m_percentage = percentage;
     }
 }
