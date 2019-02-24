@@ -3,7 +3,7 @@
 #ifdef FEATURE_SERIAL_INPUT
 
 #include "Arduino.h"
-#include "avr/wdt.h"
+// #include "avr/wdt.h"
 
 #include "serial.h"
 #include "controller.h"
@@ -12,8 +12,8 @@
 serial *system_serial = NULL;
 
 void serial_initialize(void) {
-    wdt_enable(WDTO_120MS);
-    delay(1000);
+    // wdt_enable(WDTO_120MS);
+    // delay(1000);
     Serial.begin(115200);
     while (!Serial) {
     }
@@ -127,6 +127,8 @@ void serial::process(void) {
 }
 
 void serial::update(void) {
+    // Normally wdt_reset() would be called here
+    unsigned long now = millis();
     while (Serial.available()) {
 	char c;
 
