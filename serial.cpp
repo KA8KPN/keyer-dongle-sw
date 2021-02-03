@@ -128,7 +128,7 @@ void serial::process(void) {
 
 void serial::update(void) {
     // Normally wdt_reset() would be called here
-    unsigned long now = millis();
+    // unsigned long now = millis();
     while (Serial.available()) {
 	char c;
 

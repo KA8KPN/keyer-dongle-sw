@@ -21,12 +21,12 @@ typedef enum keyer_mode {KEYER_IAMBIC_A, KEYER_IAMBIC_B, KEYER_ULTIMATIC, KEYER_
 #define MS_PER_WORD   (7*MS_PER_DOT)
 #define WPM_POT_PORT A6
 
-#define LEFT_PADDLE  11
-#define RIGHT_PADDLE 12
-#if 0
-#define PTT_1       14
-#define KEY_OUT_1   15
-#define SELECT_1    16
+#define LEFT_PADDLE  12
+#define RIGHT_PADDLE 11
+
+#define PTT_1       6
+#define KEY_OUT_1   5
+#define SELECT_1    4
 #define PTT_DELAY_1 10
 #define PTT_HANG_1  750
 
@@ -42,20 +42,13 @@ typedef enum keyer_mode {KEYER_IAMBIC_A, KEYER_IAMBIC_B, KEYER_ULTIMATIC, KEYER_
 #define PTT_DELAY_3 10
 #define PTT_HANG_3  750
 
-#define PTT_4       6
-#define KEY_OUT_4   5
-#define SELECT_4    4
+#define PTT_4       14
+#define KEY_OUT_4   15
+#define SELECT_4    16
 #define PTT_DELAY_4 10
 #define PTT_HANG_4  750
 
-#define SIDETONE 4
+#define SIDETONE 10
 #define SIDETONE_FREQUENCY 800
-#else // !0
-#define PTT_1       9
-#define KEY_OUT_1   8
-#define SELECT_1    7
-#define PTT_DELAY_1 10
-#define PTT_HANG_1  750
-#endif // !0
 
 #endif // KEYER_H_INCLUDED

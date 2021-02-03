@@ -3,7 +3,7 @@
 
 typedef enum keyer_state { KEY_DIT, KEY_DAH, KEY_UP, KEY_UP_LONGER } keyer_state_t;
 
-#define MAX_TRANSMITTERS  1
+#define MAX_TRANSMITTERS  4
 
 class transmitter {
 public:
