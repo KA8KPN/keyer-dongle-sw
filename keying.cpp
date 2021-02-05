@@ -19,7 +19,7 @@ static void null_sidetone(int frequency, bool key_down) {
     (void) key_down;
 }
 
-transmitter::transmitter(int ptt_line, int key_out_line, int select_led, unsigned ptt_delay, unsigned ptt_hang, void (*null_sidetone)(int, bool)) {
+transmitter::transmitter(int ptt_line, int key_out_line, int select_led, unsigned ptt_delay, unsigned ptt_hang, void (*sidetone)(int, bool)) {
     pinMode(ptt_line, OUTPUT);
     digitalWrite(ptt_line, LOW);
     pinMode(key_out_line, OUTPUT);
@@ -34,7 +34,7 @@ transmitter::transmitter(int ptt_line, int key_out_line, int select_led, unsigne
     m_pttHang = ptt_hang;
     m_state = keying_idle;
     m_nextStateChange = 0;
-    m_sidetoneAction = null_sidetone;
+    m_sidetoneAction = sidetone;
 }
 
 void transmitter::key_up(void) {
@@ -98,10 +98,12 @@ void transmitter::update(unsigned long now) {
 
 void transmitter::select(void) {
     digitalWrite(m_selectLed, HIGH);
+    m_sidetoneAction = sidetone_action;
 }
 
 void transmitter::unselect(void) {
     digitalWrite(m_selectLed, LOW);
+    m_sidetoneAction = null_sidetone;
 }
 
 
@@ -114,7 +116,7 @@ void keying_initialize(void) {
     digitalWrite(SIDETONE, LOW);
 
     transmitters[0] = new transmitter(PTT_1, KEY_OUT_1, SELECT_1, PTT_DELAY_1, PTT_HANG_1, sidetone_action);
-    transmitters[1] = new transmitter(PTT_2, KEY_OUT_2, SELECT_2, PTT_DELAY_2, PTT_HANG_2, sidetone_action);
-    transmitters[2] = new transmitter(PTT_3, KEY_OUT_3, SELECT_3, PTT_DELAY_3, PTT_HANG_3, sidetone_action);
-    transmitters[3] = new transmitter(PTT_4, KEY_OUT_4, SELECT_4, PTT_DELAY_4, PTT_HANG_4, sidetone_action);
+    transmitters[1] = new transmitter(PTT_2, KEY_OUT_2, SELECT_2, PTT_DELAY_2, PTT_HANG_2, null_sidetone);
+    transmitters[2] = new transmitter(PTT_3, KEY_OUT_3, SELECT_3, PTT_DELAY_3, PTT_HANG_3, null_sidetone);
+    transmitters[3] = new transmitter(PTT_4, KEY_OUT_4, SELECT_4, PTT_DELAY_4, PTT_HANG_4, null_sidetone);
 }
