@@ -39,8 +39,8 @@ input_mode_t cootie::update(unsigned long now, input_mode_t input_mode) {
 		KEY_UP(m_transmitter, m_twitchCount);
 		m_twitchCount = 0;
 		m_msTwitchTimer = 0;
+		TRANSMITTER_KEY_DOWN(m_transmitter);
 	    }
-	    TRANSMITTER_KEY_DOWN(m_transmitter);
 	}
 	else {
 	    if (m_wasKeyDown) {
@@ -48,8 +48,8 @@ input_mode_t cootie::update(unsigned long now, input_mode_t input_mode) {
 		KEY_DOWN(m_transmitter, m_twitchCount);
 		m_twitchCount = 0;
 		m_msTwitchTimer = 0;
+		TRANSMITTER_KEY_UP(m_transmitter);
 	    }
-	    TRANSMITTER_KEY_UP(m_transmitter);
 	}
     }
     if (100 <= m_twitchCount) {

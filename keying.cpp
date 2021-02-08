@@ -58,7 +58,9 @@ unsigned transmitter::key_down(void) {
 	result = m_pttDelay;
     }
     else {
-	key_down_actual();
+	if (keying_ptt_wait != m_state) {
+	    key_down_actual();
+	}
     }
     return result;
 }
