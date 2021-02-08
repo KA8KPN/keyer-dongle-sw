@@ -49,7 +49,7 @@ void serial::xmitter_config(int xmitter) {
     // Okay, there is a 'c', 5 colons and a crlf, so 8 characters
     // plus a single digit transmitter number, a single digit active flag
     // and three three digit numbers, which is 11 more characters
-    // and a nll terminator
+    // and a null terminator
     char buff[25];
     int len;
     len = sprintf(buff, "c:%d:%d:%d:%d:%d\r\n", xmitter, xmitter==system_paddles->transmitter(),
