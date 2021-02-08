@@ -52,7 +52,7 @@ void serial::xmitter_config(int xmitter) {
     // and a nll terminator
     char buff[25];
     int len;
-    len = sprintf(buff, "c:%d:%d:%d:%d:%d\r\n", xmitter, xmitter==system_paddles.transmitter(),
+    len = sprintf(buff, "c:%d:%d:%d:%d:%d\r\n", xmitter, xmitter==system_paddles->transmitter(),
 		  controllers[xmitter-1]->wpm(), controllers[xmitter-1]->kdd(),
 		  controllers[xmitter-1]->kud());
     Serial.write((uint8_t *)buff, len);

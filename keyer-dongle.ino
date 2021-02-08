@@ -31,11 +31,13 @@ void loop() {
 	// The paddles are special because the transmitter that the paddles have been configured for
 	// can be keyed either with the paddles or by the remote controller.  The other transmitters
 	// can only be keyed by the remote controller
-	if (i == system_paddles.transmitter()) {
+	if (i == system_paddles->transmitter()) {
+	    // digitalWrite(SELECT_3, HIGH);
 	    input_mode = PADDLES_UPDATE(now, input_mode);
 	    input_mode = controllers[i]->update(now, input_mode);
 	}
 	else {
+ 	    // digitalWrite(SELECT_4, HIGH);
 	    controllers[i]->update(now, MODE_REMOTE_CONTROL);
 	}
         KEYING_UPDATE(i, now);

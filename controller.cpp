@@ -84,7 +84,7 @@ input_mode_t remote_controller::update(unsigned long now, input_mode_t input_mod
 		// If we're out of queued items, unkey the transmitter
 		TRANSMITTER_KEY_UP(m_transmitter);
 		// And get the paddle mode from the paddles class
-		input_mode = system_paddles.mode();
+		input_mode = system_paddles->mode();
 	    }
 	}
     }
