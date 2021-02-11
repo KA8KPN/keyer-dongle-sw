@@ -5,14 +5,15 @@
 
 #include "iambic-a.h"
 #include "cootie.h"
-// #include "bug.h"
+#include "bug.h"
 
 paddles *system_paddles = NULL;
 
 void paddles_initialize(byte right_paddle, byte left_paddle)
 {
     // system_paddles = new iambicA();
-    system_paddles = new cootie();
+    // system_paddles = new cootie();
+    system_paddles = new bug();
     system_paddles->set_paddle_ports(right_paddle, left_paddle);
     pinMode(left_paddle, INPUT);
     digitalWrite(left_paddle, HIGH);
