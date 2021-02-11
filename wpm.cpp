@@ -24,7 +24,7 @@ void wpm::update(void) {
     unsigned wpm;
  
     // The WPM is MIN_WPM + (MAX_WPM - MIN_WPM) * potValue / 1023; appropriately rounded
-    potValue = analogRead(m_potPin);
+    potValue = (1024 - analogRead(m_potPin));
     wpm = MIN_WPM + ((MAX_WPM - MIN_WPM) * potValue + ANALOG_IN_MAX/2) / ANALOG_IN_MAX;
     if (MIN_WPM > wpm) {
 	wpm = MIN_WPM;
