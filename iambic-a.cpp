@@ -89,7 +89,7 @@ input_mode_t iambicA::update(unsigned long now, input_mode_t input_mode) {
 		KEY_DOWN(m_transmitter, TWITCHES_PER_DOT);
 		ptt_delay = TRANSMITTER_KEY_DOWN(m_transmitter);
 		m_nextStateTransitionMs = now + WPM_DOT_TWITCHES() + ptt_delay;
-		m_startReadingPaddlesMs = now + WPM_DOT_TWITCHES() + ptt_delay;
+		m_startReadingPaddlesMs = now + WPM_DOT_TWITCHES() + WPM_DOT_TWITCHES()/4 + ptt_delay;
 		m_ditClosed = false;
 		m_dahClosed = false;
 		break;
@@ -99,7 +99,7 @@ input_mode_t iambicA::update(unsigned long now, input_mode_t input_mode) {
 		KEY_DOWN(m_transmitter, TWITCHES_PER_DASH);
 		ptt_delay = TRANSMITTER_KEY_DOWN(m_transmitter);
 		m_nextStateTransitionMs = now + WPM_DASH_TWITCHES() + ptt_delay;
-		m_startReadingPaddlesMs = now + WPM_DASH_TWITCHES() + ptt_delay;
+		m_startReadingPaddlesMs = now + WPM_DASH_TWITCHES() + WPM_DOT_TWITCHES()/4 + ptt_delay;
 		m_ditClosed = false;
 		m_dahClosed = false;
 		break;
