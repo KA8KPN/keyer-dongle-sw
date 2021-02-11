@@ -20,6 +20,7 @@ void setup () {
     PADDLES_INITIALIZE(RIGHT_PADDLE, LEFT_PADDLE);
     SERIAL_INITIALIZE();
     initialize_controllers();
+    PADDLES_REVERSE();
 }
 
 void loop() {
