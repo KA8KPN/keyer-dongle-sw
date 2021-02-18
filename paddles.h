@@ -8,6 +8,7 @@ class paddles {
 public:
     paddles(void);
     virtual input_mode_t update(unsigned long now, input_mode_t mode) = 0;
+    virtual ~paddles(void);
 
     void set_paddle_ports(byte right_paddle, byte left_paddle);
     input_mode_t toggle_reverse(void);
@@ -15,7 +16,12 @@ public:
     int transmitter(void) const { return m_transmitter; }
     input_mode_t mode(void) const { return m_paddleMode; }
 
-protected:
+    static void paddles_set_iambic_a(void);
+    static void paddles_set_iambic_b(void);
+    static void paddles_set_bug(void);
+    static void paddles_set_cootie(void);
+    static void paddles_set_ultimatic(void);
+
     uint8_t m_leftPaddle, m_rightPaddle;
     uint8_t m_ditPaddle, m_dahPaddle;
     int m_transmitter;
@@ -31,6 +37,11 @@ void paddles_initialize(byte right_paddle, byte left_paddle);
 #define PADDLES_REVERSE() system_paddles->toggle_reverse()
 #define PADDLES_UPDATE(now, keyer_mode) system_paddles->update(now, keyer_mode)
 #define PADDLES_SET_TRANSMITTER(t)      system_paddles->set_transmitter(t)
+#define PADDLES_SET_IAMBIC_A()          system_paddles->paddles_set_iambic_a()
+#define PADDLES_SET_IAMBIC_B()          system_paddles->paddles_set_iambic_b()
+#define PADDLES_SET_BUG()               system_paddles->paddles_set_bug()
+#define PADDLES_SET_COOTIE()            system_paddles->paddles_set_cootie()
+#define PADDLES_SET_ULTIMATIC()         system_paddles->paddles_set_ultimatic()
 #define PADDLES_POINTER system_paddles
 
 #endif // PADDLES_H_INCLUDED

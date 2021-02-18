@@ -124,6 +124,44 @@ void serial::process(void) {
 	    controllers[xmitter-1]->kud(strtol(dptr + 1, NULL, 10));
 	}
     }
+    if (('t' == m_buffer[0]) && (':' == m_buffer[1])) {
+	if (('0' <= m_buffer[2]) && ('3'>= m_buffer[2])) {
+	    PADDLES_SET_TRANSMITTER(m_buffer[2] - '0');
+	    send_continue();
+	}
+    }
+    if (0 == strncmp("pr", m_buffer, 2)) {
+	PADDLES_REVERSE();
+	send_continue();
+    }
+    if (0 == strncmp("pm:", m_buffer, 3)) {
+	switch(*(m_buffer+3)) {
+	case 'a':
+	    PADDLES_SET_IAMBIC_A();
+	    send_continue();
+	    break;
+
+	case 'b':
+	    PADDLES_SET_IAMBIC_B();
+	    send_continue();
+	    break;
+
+	case 's':
+	    PADDLES_SET_BUG();
+	    send_continue();
+	    break;
+
+	case 'm':
+	    PADDLES_SET_COOTIE();
+	    send_continue();
+	    break;
+
+	case 'u':
+	    PADDLES_SET_ULTIMATIC();
+	    send_continue();
+	    break;
+	}
+    }
 }
 
 void serial::update(void) {

@@ -6,7 +6,9 @@
 class iambicA : public paddles {
 public:
     iambicA(void);
+    iambicA(paddles const *old);
     virtual input_mode_t update(unsigned long now, input_mode_t mode) override;
+    virtual ~iambicA(void);
 
 private:
     bool m_ditClosed, m_dahClosed;

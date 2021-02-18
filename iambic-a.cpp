@@ -5,6 +5,9 @@
 #include "wpm.h"
 #include "serial.h"
 
+iambicA::~iambicA(void) {
+}
+
 iambicA::iambicA(void) {
     m_ditClosed = false;
     m_dahClosed = false;
@@ -17,6 +20,27 @@ iambicA::iambicA(void) {
     m_lastKeyerState = KEY_UP_LONGER;
     m_msTwitchTimer = 0;
     m_twitchCount = 0;
+}
+
+iambicA::iambicA(paddles const *old_config) {
+    m_ditClosed = false;
+    m_dahClosed = false;
+    m_rightClosed = false;
+    m_leftClosed = false;
+
+    m_nextStateTransitionMs = 100 + millis();
+    m_startReadingPaddlesMs = 0;
+    m_keyerState = KEY_UP_LONGER;
+    m_lastKeyerState = KEY_UP_LONGER;
+    m_msTwitchTimer = 0;
+    m_twitchCount = 0;
+
+    m_leftPaddle = old_config->m_leftPaddle;
+    m_rightPaddle = old_config->m_rightPaddle;
+    m_ditPaddle = old_config->m_ditPaddle;
+    m_dahPaddle = old_config->m_dahPaddle;
+    m_transmitter = old_config->m_transmitter;
+    m_paddleMode = old_config->m_paddleMode;
 }
 
 input_mode_t iambicA::update(unsigned long now, input_mode_t input_mode) {

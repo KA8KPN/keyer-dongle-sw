@@ -6,7 +6,9 @@
 class bug : public paddles {
 public:
     bug(void);
+    bug(paddles const *old);
     virtual input_mode_t update(unsigned long now, input_mode_t mode) override;
+    virtual ~bug(void);
 
 private:
     bool m_ditClosed, m_dahClosed;

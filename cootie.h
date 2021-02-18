@@ -6,7 +6,9 @@
 class cootie : public paddles {
 public:
     cootie(void);
+    cootie(paddles const *old);
     virtual input_mode_t update(unsigned long now, input_mode_t mode) override;
+    virtual ~cootie(void);
 
 private:
     bool m_leftClosed, m_rightClosed;

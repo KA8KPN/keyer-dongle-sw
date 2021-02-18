@@ -5,11 +5,29 @@
 #include "wpm.h"
 #include "serial.h"
 
+
+cootie::~cootie(void) {
+}
+
 cootie::cootie(void) {
     m_msTwitchTimer = 0;
     m_twitchCount = 0;
     m_then = millis();
     m_wasKeyDown = false;
+}
+
+cootie::cootie(paddles const *old_config) {
+    m_msTwitchTimer = 0;
+    m_twitchCount = 0;
+    m_then = millis();
+    m_wasKeyDown = false;
+
+    m_leftPaddle = old_config->m_leftPaddle;
+    m_rightPaddle = old_config->m_rightPaddle;
+    m_ditPaddle = old_config->m_ditPaddle;
+    m_dahPaddle = old_config->m_dahPaddle;
+    m_transmitter = old_config->m_transmitter;
+    m_paddleMode = old_config->m_paddleMode;
 }
 
 input_mode_t cootie::update(unsigned long now, input_mode_t input_mode) {
