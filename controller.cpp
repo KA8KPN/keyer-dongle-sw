@@ -20,6 +20,9 @@ remote_controller::remote_controller(unsigned transmitter) : m_transmitter(trans
     m_count = 0;
     m_paused = false;
     m_nextTransition = 0;
+    m_wpm = 0;
+    m_kdd = 0;
+    m_kud = 7;
 }
 
 void remote_controller::key(bool key_down, unsigned duration) {

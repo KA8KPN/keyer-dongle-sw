@@ -77,5 +77,5 @@ input_mode_t paddles::toggle_reverse(void) {
 
 void paddles::set_transmitter(int t) {
     TRANSMITTER_UNSELECT(m_transmitter);
-    m_transmitter = t;
+    m_transmitter = t-1;
 }

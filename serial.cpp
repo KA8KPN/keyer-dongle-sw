@@ -52,7 +52,7 @@ void serial::xmitter_config(int xmitter) {
     // and a null terminator
     char buff[25];
     int len;
-    len = sprintf(buff, "c:%d:%d:%d:%d:%d\r\n", xmitter, xmitter==system_paddles->transmitter(),
+    len = sprintf(buff, "c:%d:%d:%d:%d:%d\r\n", xmitter, (xmitter-1)==system_paddles->transmitter(),
 		  controllers[xmitter-1]->wpm(), controllers[xmitter-1]->kdd(),
 		  controllers[xmitter-1]->kud());
     Serial.write((uint8_t *)buff, len);
@@ -64,7 +64,8 @@ void serial::process(void) {
 	int xmitter;
 
 	xmitter = strtol(m_buffer+2, &dptr, 10);
-	if (dptr != (2 + m_buffer)) {
+	if ((dptr != (2 + m_buffer)) &&
+	    (0 < xmitter) && (MAX_TRANSMITTERS >= xmitter)) {
 	    controllers[xmitter-1]->key(false,strtol(dptr + 1, NULL, 10));
 	    send_continue();
 	}
@@ -74,7 +75,8 @@ void serial::process(void) {
 	int xmitter;
 
 	xmitter = strtol(m_buffer+2, &dptr, 10);
-	if (dptr != (2 + m_buffer)) {
+	if ((dptr != (2 + m_buffer)) &&
+	    (0 < xmitter) && (MAX_TRANSMITTERS >= xmitter)) {
 	    controllers[xmitter-1]->key(true, strtol(dptr + 1, NULL, 10));
 	    send_continue();
 	}
@@ -89,7 +91,8 @@ void serial::process(void) {
 	int xmitter;
 
 	xmitter = strtol(m_buffer+2, &dptr, 10);
-	if (dptr != (2 + m_buffer)) {
+	if ((dptr != (2 + m_buffer)) &&
+	    (0 < xmitter) && (MAX_TRANSMITTERS >= xmitter)) {
 	    controllers[xmitter-1]->wpm(strtol(dptr + 1, NULL, 10));
 	    send_continue();
 	}
@@ -99,7 +102,8 @@ void serial::process(void) {
 	int xmitter;
 
 	xmitter = strtol(m_buffer+2, &dptr, 10);
-	if (dptr != (2 + m_buffer)) {
+	if ((dptr != (2 + m_buffer)) &&
+	    (0 < xmitter) && (MAX_TRANSMITTERS >= xmitter)) {
 	    send_continue();
 	    xmitter_config(xmitter);
 	}
@@ -109,7 +113,8 @@ void serial::process(void) {
 	int xmitter;
 
 	xmitter = strtol(m_buffer+4, &dptr, 10);
-	if (dptr != (4 + m_buffer)) {
+	if ((dptr != (4 + m_buffer)) &&
+	    (0 < xmitter) && (MAX_TRANSMITTERS >= xmitter)) {
 	    send_continue();
 	    controllers[xmitter-1]->kdd(strtol(dptr + 1, NULL, 10));
 	}
@@ -119,13 +124,14 @@ void serial::process(void) {
 	int xmitter;
 
 	xmitter = strtol(m_buffer+4, &dptr, 10);
-	if (dptr != (4 + m_buffer)) {
+	if ((dptr != (4 + m_buffer)) &&
+	    (0 < xmitter) && (MAX_TRANSMITTERS >= xmitter)) {
 	    send_continue();
 	    controllers[xmitter-1]->kud(strtol(dptr + 1, NULL, 10));
 	}
     }
     if (('t' == m_buffer[0]) && (':' == m_buffer[1])) {
-	if (('0' <= m_buffer[2]) && ('3'>= m_buffer[2])) {
+	if (('0' < m_buffer[2]) && ('5' > m_buffer[2])) {
 	    PADDLES_SET_TRANSMITTER(m_buffer[2] - '0');
 	    send_continue();
 	}
