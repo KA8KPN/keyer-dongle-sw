@@ -1,0 +1,3 @@
+1)  Make the WPM work through the protocol
+
+2)  Make the key-down delay and key-up delay through the transmitter and protocol work on a per-transmitter basis.
