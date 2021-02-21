@@ -19,6 +19,7 @@ void serial_initialize(void) {
     }
 
     system_serial = new serial(true);
+    system_serial->send_continue();
 }
 
 
