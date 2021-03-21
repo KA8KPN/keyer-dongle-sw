@@ -108,7 +108,7 @@ void rotary_encoder::update(void) {
 	switch (m_knobMode) {
 	case KNOB_XMIT_SELECT:
 	{
-	    if (encoder_position > 10) {
+	    if (encoder_position > SENSITIVITY) {
 		encoder_position = 0;
 		if (3 > PADDLES_TRANSMITTER()) {
 		    PADDLES_SET_TRANSMITTER(1+PADDLES_TRANSMITTER());
@@ -117,7 +117,7 @@ void rotary_encoder::update(void) {
 		    PADDLES_SET_TRANSMITTER(0);
 		}
 	    }
-	    if (encoder_position < -10) {
+	    if (encoder_position < -SENSITIVITY) {
 		encoder_position = 0;
 		if (0 < PADDLES_TRANSMITTER()) {
 		    PADDLES_SET_TRANSMITTER(PADDLES_TRANSMITTER()-1);
@@ -145,7 +145,7 @@ void rotary_encoder::update(void) {
 		digitalWrite(SELECT_4, LOW);
 	    }
 	}
-	if ((encoder_position > 10) || (encoder_position < -10)) {
+	if ((encoder_position > SENSITIVITY) || (encoder_position < -SENSITIVITY)) {
 	    PADDLES_REVERSE();
 	    encoder_position = 0;
 	}
@@ -168,11 +168,11 @@ void rotary_encoder::update(void) {
 		digitalWrite(SELECT_2, HIGH);
 		digitalWrite(SELECT_3, HIGH);
 		digitalWrite(SELECT_4, LOW);
-		if (encoder_position > 10) {
+		if (encoder_position > SENSITIVITY) {
 		    encoder_position = 0;
 		    PADDLES_SET_COOTIE();
 		}		
-		if (encoder_position < -10) {
+		if (encoder_position < -SENSITIVITY) {
 		    encoder_position = 0;
 		    PADDLES_SET_IAMBIC_A();
 		}		
@@ -183,11 +183,11 @@ void rotary_encoder::update(void) {
 		digitalWrite(SELECT_2, HIGH);
 		digitalWrite(SELECT_3, LOW);
 		digitalWrite(SELECT_4, HIGH);
-		if (encoder_position > 10) {
+		if (encoder_position > SENSITIVITY) {
 		    encoder_position = 0;
 		    PADDLES_SET_IAMBIC_A();
 		}		
-		if (encoder_position < -10) {
+		if (encoder_position < -SENSITIVITY) {
 		    encoder_position = 0;
 		    PADDLES_SET_BUG();
 		}		
@@ -198,11 +198,11 @@ void rotary_encoder::update(void) {
 		digitalWrite(SELECT_2, LOW);
 		digitalWrite(SELECT_3, LOW);
 		digitalWrite(SELECT_4, LOW);
-		if (encoder_position > 10) {
+		if (encoder_position > SENSITIVITY) {
 		    encoder_position = 0;
 		    PADDLES_SET_BUG();
 		}		
-		if (encoder_position < -10) {
+		if (encoder_position < -SENSITIVITY) {
 		    encoder_position = 0;
 		    PADDLES_SET_COOTIE();
 		}		
