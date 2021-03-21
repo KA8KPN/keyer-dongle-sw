@@ -9,6 +9,7 @@ public:
     iambicA(paddles const *old);
     virtual input_mode_t update(unsigned long now, input_mode_t mode) override;
     virtual ~iambicA(void);
+    virtual keyer_mode_t keyer_mode(void) const override { return KEYER_IAMBIC_A; }
 
 private:
     bool m_ditClosed, m_dahClosed;

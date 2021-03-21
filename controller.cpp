@@ -4,6 +4,7 @@
 #include "paddles.h"
 #include "serial.h"
 #include "wpm.h"
+#include "rotary_encoder.h"
 
 remote_controller *controllers[MAX_TRANSMITTERS];
 

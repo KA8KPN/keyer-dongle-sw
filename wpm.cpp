@@ -23,6 +23,8 @@ void wpm::update(void) {
     int potValue = 0;
     unsigned wpm;
  
+    TRANSMITTER_SELECT(PADDLES_TRANSMITTER());
+
     // The WPM is MIN_WPM + (MAX_WPM - MIN_WPM) * potValue / 1023; appropriately rounded
     potValue = (1024 - analogRead(m_potPin));
     wpm = MIN_WPM + ((MAX_WPM - MIN_WPM) * potValue + ANALOG_IN_MAX/2) / ANALOG_IN_MAX;

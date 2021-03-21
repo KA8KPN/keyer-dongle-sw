@@ -12,7 +12,7 @@ typedef enum keyer_mode {KEYER_IAMBIC_A, KEYER_IAMBIC_B, KEYER_ULTIMATIC, KEYER_
 #define MIN_WPM 5L
 #define MAX_WPM 40L
 #define MAX_WPM_OFFSET 25L
-#define DEFAULT_WPM 20
+#define DEFAULT_WPM 15
 // This is milliseconds per twitch for 1WPM.  Divide it by the WPM to get the real milliseconds per twitch
 #define MS_PER_TWITCH 120
 #define TWITCHES_PER_DOT 10
@@ -48,6 +48,10 @@ typedef enum keyer_mode {KEYER_IAMBIC_A, KEYER_IAMBIC_B, KEYER_ULTIMATIC, KEYER_
 #define SELECT_4    16
 #define PTT_DELAY_4 10
 #define PTT_HANG_4  750
+
+#define ENCODER_PIN_A  2
+#define ENCODER_PIN_B  3
+#define ENCODER_BUTTON A7
 
 #define SIDETONE 10
 #define SIDETONE_FREQUENCY 800

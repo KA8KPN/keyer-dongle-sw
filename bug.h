@@ -9,6 +9,7 @@ public:
     bug(paddles const *old);
     virtual input_mode_t update(unsigned long now, input_mode_t mode) override;
     virtual ~bug(void);
+    virtual keyer_mode_t keyer_mode(void) const { return KEYER_SEMIAUTO; }
 
 private:
     bool m_ditClosed, m_dahClosed;

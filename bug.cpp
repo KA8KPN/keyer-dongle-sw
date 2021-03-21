@@ -3,6 +3,7 @@
 #include "bug.h"
 
 #include "wpm.h"
+#include "rotary_encoder.h"
 #include "serial.h"
 
 bug::~bug(void) {
@@ -38,7 +39,6 @@ bug::bug(paddles const *old_config) {
 }
 
 input_mode_t bug::update(unsigned long now, input_mode_t input_mode) {
-    TRANSMITTER_SELECT(m_transmitter);
     m_ditClosed = (0 == digitalRead(m_ditPaddle));
     m_dahClosed = (0 == digitalRead(m_dahPaddle));
 

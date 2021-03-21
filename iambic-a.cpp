@@ -3,6 +3,7 @@
 #include "iambic-a.h"
 
 #include "wpm.h"
+#include "rotary_encoder.h"
 #include "serial.h"
 
 iambicA::~iambicA(void) {
@@ -44,7 +45,6 @@ iambicA::iambicA(paddles const *old_config) {
 }
 
 input_mode_t iambicA::update(unsigned long now, input_mode_t input_mode) {
-    TRANSMITTER_SELECT(m_transmitter);
     if (now >= m_startReadingPaddlesMs) {
 	m_dahClosed = m_dahClosed || (0 == digitalRead(m_dahPaddle));
 	m_ditClosed = m_ditClosed || (0 == digitalRead(m_ditPaddle));

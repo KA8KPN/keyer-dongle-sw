@@ -3,6 +3,7 @@
 #include "cootie.h"
 
 #include "wpm.h"
+#include "rotary_encoder.h"
 #include "serial.h"
 
 
@@ -31,7 +32,6 @@ cootie::cootie(paddles const *old_config) {
 }
 
 input_mode_t cootie::update(unsigned long now, input_mode_t input_mode) {
-    TRANSMITTER_SELECT(m_transmitter);
     m_msTwitchTimer += (now - m_then);
     m_then = now;
     while (m_msTwitchTimer > WPM_TWITCHES()) {
