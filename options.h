@@ -16,6 +16,4 @@
 #error "You can have only one of FEATURE_ROTARY_ENCODER or FEATURE_SPEED_CONTROL"
 #endif
 
-#include "serial_log.h"
-
 #endif // OPTIONS_H_INCLUDED
